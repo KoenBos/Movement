@@ -58,11 +58,11 @@ namespace Movement
 			float spr_heigth = TextureSize.Y;
 
 			// TODO implement...
-			if (Position.X > scr_width|| Position.X < 0)
+			if (Position.X + spr_width / 2 > scr_width|| Position.X - spr_width /2 < 0)
 			{
 				xspeed *= -1;
 			}
-			if (Position.Y > scr_height|| Position.Y < 0)
+			if (Position.Y + spr_heigth /2 > scr_height|| Position.Y - spr_heigth / 2 < 0)
 			{
 				yspeed *= -1;
 			}
