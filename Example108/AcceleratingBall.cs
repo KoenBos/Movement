@@ -1,5 +1,6 @@
 using System.Numerics; // Vector2
 using Raylib_cs; // Color
+using System;
 
 /*
 In this class, we have the properties:
@@ -22,8 +23,10 @@ namespace Movement
 {
 	class AcceleratingBall : SpriteNode
 	{
-		// your private fields here (add Velocity, Acceleration, and MaxSpeed)
-		Vector2 Velocity = new Vector2(200, 200);
+		//Private fields here (add Velocity, Acceleration, and MaxSpeed)
+		private Vector2 Velocity = new Vector2(100,100);
+		private float  MaxSpeed = 1500;
+		private Vector2 Acceleration;
 
 		// constructor + call base constructor
 		public AcceleratingBall() : base("resources/ball.png")
@@ -36,33 +39,59 @@ namespace Movement
 		public override void Update(float deltaTime)
 		{
 			Move(deltaTime);
-			BounceEdges();
+			WrapEdges();
+			Console.WriteLine(Velocity.Length());
+			Velocity = Limit(Velocity, MaxSpeed);
 		}
 
-		// your own private methods
+		//Private methods
+	
 		private void Move(float deltaTime)
 		{
 			// TODO implement
-			// Position += Velocity * deltaTime;
-			Position.X += Velocity.X * deltaTime;
-			Position.Y += Velocity.Y * deltaTime;
+			Position += Velocity * deltaTime;
+			Velocity += Acceleration * deltaTime;
+			Acceleration = new Vector2(40, 30);
+			// limit to a maximum speed of 1000 pixels/second
+			
 		}
+		
+		 private Vector2 Limit(Vector2 v, float max)
+        {
+            Vector2 limited = v;
 
-		private void BounceEdges()
+            if (v.Length() > max)
+            {
+                limited = Vector2.Normalize(v);
+                limited = limited * max;
+            }
+
+            return limited;
+        }
+
+		private void WrapEdges()
 		{
 			float scr_width = Settings.ScreenSize.X;
 			float scr_height = Settings.ScreenSize.Y;
 			float spr_width = TextureSize.X;
 			float spr_heigth = TextureSize.Y;
 
-			// TODO implement...
-			if (Position.X > scr_width|| Position.X < 0)
+			
+			if (Position.X > scr_width)
 			{
-				Velocity.X *= -1;
+				Position.X *= 0;
 			}
-			if (Position.Y > scr_height|| Position.Y < 0)
+			if (Position.X < 0)
 			{
-				Velocity.Y *= -1;
+				Position.X = scr_width;
+			}
+			if (Position.Y > scr_height)
+			{
+				Position.Y *= 0;
+			}
+			if (Position.Y < 0)
+			{
+				Position.Y = scr_height;
 			}
 		}
 

@@ -21,17 +21,17 @@ Methods:
 
 namespace Movement
 {
-	class SpaceShip : SpriteNode
+	class SpaceShip : MoverNode
 	{
 		// your private fields here (rotSpeed, thrustForce)
 		private float rotSpeed;
-		// private float thrustForce;
+		private float thrustForce;
 
 		// constructor + call base constructor
 		public SpaceShip() : base("resources/spaceship.png")
 		{
 			rotSpeed = (float)Math.PI; // rad/second
-			// thrustForce = 500;
+			thrustForce = 750f;
 
 			Position = new Vector2(Settings.ScreenSize.X / 2, Settings.ScreenSize.Y / 2);
 			Color = Color.YELLOW;
@@ -44,12 +44,7 @@ namespace Movement
 			WrapEdges();
 		}
 
-		// your own private methods
-		private void Move(float deltaTime)
-		{
-			// TODO implement
-			// Position += Velocity * deltaTime;
-		}
+		// your own private method
 
 		private void WrapEdges()
 		{
@@ -58,10 +53,22 @@ namespace Movement
 			float spr_width = TextureSize.X;
 			float spr_heigth = TextureSize.Y;
 
-			// TODO implement...
+			
 			if (Position.X > scr_width)
 			{
-				// ...
+				Position.X *= 0;
+			}
+			if (Position.X < 0)
+			{
+				Position.X = scr_width;
+			}
+			if (Position.Y > scr_height)
+			{
+				Position.Y *= 0;
+			}
+			if (Position.Y < 0)
+			{
+				Position.Y = scr_height;
 			}
 		}
 
@@ -79,7 +86,7 @@ namespace Movement
 		{
 			// TODO implement
 			Color = Color.ORANGE;
-			// use thrustForce somewhere here
+			Acceleration = thrustForce * new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
 		}
 
 		public void NoThrust()

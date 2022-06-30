@@ -20,56 +20,67 @@ Methods:
 
 namespace Movement
 {
-	class BouncingBall : SpriteNode
-	{
-		// your private fields here (add Velocity, Acceleration, addForce method)
+    class BouncingBall : MoverNode
+    {
+        // your private fields here (add Velocity, Acceleration, addForce method)
+        //private Vector2 Acceleration = new Vector2(0, 0);
+        // constructor + call base constructor
+        public BouncingBall() : base("resources/ball.png")
+        {
+            Position = new Vector2(Settings.ScreenSize.X / 6, Settings.ScreenSize.Y / 4);
+            Color = Color.BLUE;
+        }
 
+        // Update is called every frame
+        public override void Update(float deltaTime)
+        {
+            Fall(deltaTime);
+            BounceEdges();
+        }
 
-		// constructor + call base constructor
-		public BouncingBall() : base("resources/ball.png")
-		{
-			Position = new Vector2(Settings.ScreenSize.X / 6, Settings.ScreenSize.Y / 4);
-			Color = Color.BLUE;
-		}
+        // your own private methods
+        public void Fall(float deltaTime)
+        {
+            // TODO implement
+            Position += Acceleration * deltaTime;
 
-		// Update is called every frame
-		public override void Update(float deltaTime)
-		{
-			Fall(deltaTime);
-			BounceEdges();
-		}
+            Vector2 wind = new Vector2(0.5f, 0.0f);
+            Vector2 gravity = new Vector2(0.0f, 0.5f);
 
-		// your own private methods
-		private void Fall(float deltaTime)
-		{
-			// TODO implement
-			// Position += Velocity * deltaTime;
+            AddForce(wind);
+            AddForce(gravity);
+        }
+        private void BounceEdges()
+        {
+            float scr_width = Settings.ScreenSize.X;
+            float scr_height = Settings.ScreenSize.Y;
+            float spr_width = TextureSize.X;
+            float spr_heigth = TextureSize.Y;
 
-			Vector2 wind = new Vector2(1.8f, 0.0f);
-			Vector2 gravity = new Vector2(0.0f, 9.8f);
+            // TODO implement...
+            if (Position.X + spr_width / 2 > scr_width)
+            {
+                Position.X = scr_width - spr_width / 2;
+                Acceleration.X *= -1;
+            }
 
-			AddForce(wind);
-			AddForce(gravity);
-		}
+            if (Position.X - spr_width / 2 < 0)
+            {
+                Position.X = 0 + spr_width / 2;
+                Acceleration.X *= -1;
+            }
 
-		private void AddForce(Vector2 force)
-		{
-			// TODO implement
-		}
+            if (Position.Y + spr_heigth / 2 > scr_height)
+            {
+                Position.Y = scr_height - spr_heigth / 2;
+                Acceleration.Y *= -1;
+            }
 
-		private void BounceEdges()
-		{
-			float scr_width = Settings.ScreenSize.X;
-			float scr_height = Settings.ScreenSize.Y;
-			float spr_width = TextureSize.X;
-			float spr_heigth = TextureSize.Y;
-
-			// TODO implement...
-			if (Position.X > scr_width)
-			{
-				// ...
-			}
-		}
-
-	}
+            if (Position.Y - spr_heigth / 2 < 0)
+            {
+                Position.Y = 0 + spr_heigth / 2;
+                Acceleration *= -1;
+            }
+        }
+    }
 }
